@@ -1,0 +1,194 @@
+movie.js
+
+const express = require("express");
+const router = express.Router();
+const Movie = require("../../db/schemas/movieSchema")
+router.get("/", async (req, res) => {
+    const queryParams = req.query;
+    const filters = ();
+    if (queryParams.name) {
+        filters.name = {
+            $regex: '^$(queryParams.name'),
+            $options: "1",
+        );
+
+    }
+    if (queryParams.rating){
+        filters.rating = {
+            $gte.parseFloat(queryParams.rating),
+        );
+
+    }
+    const movies = await Movie.find(filters);
+    }
+    }
+    const movies = await Movie.find();
+    res.json(movies);
+    
+});
+router.post("/", async(req, res) => {
+  try { 
+    const movieId = req.params.Id;
+    const updateMovieData = req.body;
+    await Movie.findByIdAndUpdate(movieId, updateMovieData)
+    res.json({
+        message: "Movie added successfully"
+    })
+}   catch (error) {
+     if(error,kind === "objectId") {
+        res.status(404),json( {message: "Movie not found"});
+        
+     }else {
+        
+        res.status(500).json({
+        message: "Internal server error",
+    });
+}
+        
+    
+
+
+
+});
+
+module.exports = router
+
+app.js
+require("dotenv").config();
+const movieRoutes = require("./routes/movies/movie");
+const bookRoutes = require("./routes/movies/book");
+const express = require("express");
+const db = require("./db/index");
+const app = new express();
+const port = process.env.PORT || 8080;
+db()
+app.use(express.json)
+
+app.use("/movie", movieRoutes);
+app.use("/book",bookRoutes);
+db();
+app.listen(port, () => {
+  console.log(`Express app listening at http://localhost:${port}`);
+});
+
+package.json
+  {
+  "name": "movie-listing-backend",
+  "version": "1.0.0",
+  "description": "To list the movies",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon app.js"
+   
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.5.4",
+    "nodemon": "^3.1.4"
+  }
+}
+
+  .env
+  PORT = 8080
+MONGODB_URI = mongodb+srv://aishwaryaramasamy25:Zj0tYKzeXMj3ow8D@aishwarya.vmpib.mongodb.net/?retryWrites=true&w=majority&appName=Aishwarya
+
+  book.js
+  const express = require("express");
+const router = express.Router();
+router.get("/", (req, res) => {
+    res.json({ 
+        message: "Ticket booked",
+    });
+    
+});
+module.exports = router;
+routes/movies
+  const express = require("express");
+const router = express.Router();
+router.get("/", (req, res) => {
+    res.json({ 
+        message: "Ticket booked",
+    });
+    
+});
+module.exports = router;
+
+  schemas
+  const express = require("express");
+const router = express.Router();
+router.get("/", (req, res) => {
+    res.json({ 
+        message: "Ticket booked",
+    });
+    
+});
+module.exports = router;
+launch.json
+  
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome against localhost",
+            "url": "http://localhost:8080",
+            "webRoot": "${workspaceFolder}"
+        }
+    ]
+}
+
+  movieschema
+  const mongooese = require("mongoose");
+
+const movieSchema = new mongooese.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  releaseDate: {
+    type: Date,
+    required: true,
+  },
+  genre: {
+    type: String,
+    required: false,
+  },
+  duration: {
+    type: Number,
+    required: true,
+  },
+  rating: {
+    type: Number,
+    required: true,
+  },
+});
+
+const Movie = mongooese.model("Movie", movieSchema);
+
+module.exports = Movie;
+
+  index.js
+  const mongoose = require('mongoose');
+const connectDB = async () => {
+    try {
+        await mongoose.connect(process.env.MONGODB_URI);
+        console.log('MongoDB connected...');
+        
+    } catch (err) {
+        console.log(' MongoDB connection error;',err);
+        throw err;
+    }
+}
+
+module.exports = connectDB;
